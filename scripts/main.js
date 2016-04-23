@@ -2,10 +2,10 @@
 var sphereVal = 0;
 var sphereImage = document.querySelector('img');
 var sphereImageFile = sphereImage.getAttribute('src');
-var sphereButton = document.querySelector('button');
-sphereButton.onclick = function() {
+//var sphereButton = document.querySelector('button');
+/*sphereButton.onclick = function() {
   getInputForSphere();
-}
+}*/
 
 $("#slider").slider({
         orientation: "horizontal",
@@ -16,11 +16,24 @@ $("#slider").slider({
         step: .001,
         animate: true,
         slide: function (event, ui) {
-            $("#a_field").val(ui.value);
+            //$("#sphere_text__field").val(ui.value);
+            $("#sphere_text").val(ui.value);
             chooseImage(ui.value);
-            $("#a").text(ui.value);
+            //$("#sphere_text").text(ui.value);
         }
     });
+
+$("#sphere_text").change(function () {
+    var sphereVal = this.value;
+    if(isNumber(parseFloat(sphereVal))){
+      console.log(sphereVal);
+      $("#slider").slider("value", parseInt(sphereVal));
+      chooseImage(sphereVal);
+    }
+    else{
+      console.log("NOT A NUMBER");
+    }
+});
 
 function getSphereValue(){
 	sphereVal = localStorage.getItem('sphere');
