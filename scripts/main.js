@@ -1,11 +1,35 @@
 
 var sphereVal = 0;
-var sphereImage = document.querySelector('img');
+var sphereImage = document.querySelector('#mainImg');
 var sphereImageFile = sphereImage.getAttribute('src');
+var sphereTabDiv = document.querySelector('#sphereTab');
+var pdTabDiv = document.querySelector('#pdTab');
 //var sphereButton = document.querySelector('button');
 /*sphereButton.onclick = function() {
   getInputForSphere();
 }*/
+
+sphereTabDiv.style.cursor = 'pointer';
+sphereTabDiv.onclick = function(){
+  alert('Clicked on sphere');
+}
+sphereTabDiv.onmouseover = function(){
+  this.style.backgroundColor = 'red';
+}
+sphereTabDiv.onmouseout = function(){
+  this.style.backgroundColor = 'white';
+}
+
+pdTabDiv.style.cursor = 'pointer';
+pdTabDiv.onclick = function(){
+  alert('Clicked on pupillary distance');
+}
+pdTabDiv.onmouseover = function(){
+  this.style.backgroundColor = 'red';
+}
+pdTabDiv.onmouseout = function(){
+  this.style.backgroundColor = 'white';
+}
 
 $("#slider").slider({
         orientation: "horizontal",
