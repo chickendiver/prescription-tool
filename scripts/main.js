@@ -43,6 +43,7 @@ $("#slider").slider({
             //$("#sphere_text__field").val(ui.value);
             $("#sphere_text").val(ui.value);
             chooseImage(ui.value);
+            $("#sphereTabVal").text(ui.value);
             //$("#sphere_text").text(ui.value);
         }
     });
@@ -52,6 +53,7 @@ $("#sphere_text").change(function () {
     if(isNumber(parseFloat(sphereVal))){
       console.log(sphereVal);
       $("#slider").slider("value", parseInt(sphereVal));
+      $("#sphereTabVal").text(sphereVal);
       chooseImage(sphereVal);
     }
     else{
