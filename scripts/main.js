@@ -1,5 +1,5 @@
-var sphereImage = document.querySelector('#mainImg');
-var sphereImageFile = sphereImage.getAttribute('src');
+var mainImage = document.querySelector('#mainImg');
+var sphereImageFile = mainImage.getAttribute('src');
 var sphereTabDiv = document.querySelector('#sphereTab');
 var pdTabDiv = document.querySelector('#pdTab');
 var segmentTitle = document.querySelector('#sectionTitle');
@@ -10,6 +10,7 @@ var maxVal = 20.00;
 var minVal = -20.00;
 var defaultVal = 0.00;
 var stepVal = 0.01;
+var currentVal = 0;
 
 var mainImageArray = [];
 
@@ -42,6 +43,9 @@ sphereTabDiv.onclick = function(){
   minVal = -20.00;
   defaultVal = 0.00;
   stepVal = 0.01;
+  setValues(sphereVal);
+  chooseImage(sphereVal);
+  resetSlider();
 }
 sphereTabDiv.onmouseover = function(){
   this.style.backgroundColor = 'red';
@@ -60,6 +64,9 @@ pdTabDiv.onclick = function(){
   minVal = 40.00;
   defaultVal = 60.00;
   stepVal = 0.01;
+  setValues(pdVal);
+  chooseImage(pdVal);
+  resetSlider();
 }
 pdTabDiv.onmouseover = function(){
   this.style.backgroundColor = 'red';
@@ -73,7 +80,7 @@ $("#slider").slider({
         range: false,
         min: minVal,
         max: maxVal,
-        value: defaultVal,
+        value: currentVal,
         step: stepVal,
         animate: true,
         slide: function (event, ui) {
@@ -84,13 +91,13 @@ $("#slider").slider({
         }
     });
 
-$("#sphere_text").change(function () {
-    var sphereVal = this.value;
-    if(isNumber(parseFloat(sphereVal))){
-      console.log(sphereVal);
-      $("#slider").slider("value", parseInt(sphereVal));
-      $("#sphereTabVal").text(sphereVal);
-      chooseImage(sphereVal);
+$("#main_text").change(function () {
+    var changedValue = this.value;
+    if(isNumber(parseFloat(changedValue))){
+      console.log(changedValue);
+      $("#slider").slider("value", parseInt(changedValue));
+      setValues(changedValue);
+      chooseImage(changedValue);
     }
     else{
       console.log("NOT A NUMBER");
@@ -98,13 +105,25 @@ $("#sphere_text").change(function () {
 });
 
 function setValues(value){
-  $("#sphere_text").val(value);
-  $("#sphereTabVal").text(value);
+  if($("#sectionTitle").text() == "Spherical") {
+    sphereVal = value;
+    currentVal = sphereVal;
+    $("#main_text").val(value);
+    $("#sphereTabVal").text(value);
+  }
+  else if($("#sectionTitle").text() == "Pupillary Distance") {
+    pdVal = value;
+    currentVal = pdVal;
+    $("#main_text").val(value);
+    $("#pdTabVal").text(value);
+  }
+  
 }
 
+/*
 function getSphereValue(){
 	sphereVal = localStorage.getItem('sphere');
-}
+}*/
 
 function getInputForSphere(){
 	sphereVal = prompt('Please enter a sphere value');
@@ -114,14 +133,68 @@ function getInputForSphere(){
 }
 
 function isNumber(numToCheck){
+  //TODO: Make this actually check if the value is a number
 	return true
 }
 
 function resetSlider(){
-  //reset slider here
+  $("#slider").slider({
+        orientation: "horizontal",
+        range: false,
+        min: minVal,
+        max: maxVal,
+        value: currentVal,
+        step: stepVal,
+        animate: true,
+        slide: function (event, ui) {
+            //$("#sphere_text__field").val(ui.value);
+            setValues(ui.value);
+            chooseImage(ui.value);
+            //$("#sphere_text").text(ui.value);
+        }
+    });
 }
 
-function chooseImage(sphereNum){
+//TODO: Refactor to be more efficient
+function getValueIndex(value){
+  var imgChangeThreshold = 5;
+  var valueIndex = 4;
+  if (value < defaultVal){
+    if ((value >= minVal) && (value < (minVal + imgChangeThreshold))){
+      valueIndex = 0;
+    }
+    else if((value >= (minVal + imgChangeThreshold*2)) && (value < (minVal + imgChangeThreshold*3))){
+      valueIndex = 1;
+    }
+    else if((value >= (minVal + imgChangeThreshold*3)) && (value < (minVal + imgChangeThreshold*4))){
+      valueIndex = 2;
+    }
+    else if(value >= (minVal + imgChangeThreshold*4)){
+      valueIndex = 3;
+    }
+  }
+  else if (value > defaultVal){
+    if ((value <= maxVal) && (value > (maxVal - imgChangeThreshold))){
+      valueIndex = 5;
+    }
+    else if((value <= (maxVal - imgChangeThreshold*2)) && (value > (maxVal - imgChangeThreshold*3))){
+      valueIndex = 6;
+    }
+    else if((value <= (maxVal - imgChangeThreshold*3)) && (value > (maxVal - imgChangeThreshold*4))){
+      valueIndex = 7;
+    }
+    else if(value <= (maxVal - imgChangeThreshold*4)){
+      valueIndex = 8;
+    }
+  }
+
+  return valueIndex;
+
+}
+
+function chooseImage(val){
+  mainImageFile = mainImageArray[getValueIndex(val)];
+  /*
 	if ((parseFloat(sphereNum) >= -20.00) & (parseFloat(sphereNum) <= -0.005)){
 		sphereImageFile = "images/sphere_image_1.jpg";
 		//alert("Your eyes are myopic (nearsighted)!");
@@ -134,6 +207,6 @@ function chooseImage(sphereNum){
 		sphereImageFile = "images/sphere_image_3.jpg";
 		//alert("You have normal vision!");
 	}
-
-	sphereImage.setAttribute('src', sphereImageFile);
+*/
+	mainImage.setAttribute('src', mainImageFile);
 }
